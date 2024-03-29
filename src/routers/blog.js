@@ -1,5 +1,7 @@
 const express = require('express');
 const Blog = require('../models/blog')
+const auth = require('../middleware/auth')
+
 const router = new express.Router();
 
 router.get('/blogs', async (req, res) => {
@@ -12,7 +14,7 @@ router.get('/blogs', async (req, res) => {
 
 })
 
-router.post('/blogs/create', async (req, res) => {
+router.post('/blogs/create', auth, async (req, res) => {
 
 })
 
