@@ -21,13 +21,10 @@ const blogSchema = mongoose.Schema(
     likeBy: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        }
-    ],
-    noOfLikes: {
-        type: Number,
-        default: 0
-    }
+            ref: 'User',
+            unique: true
+        },
+    ]
   },
   {
     timestamps: true,
