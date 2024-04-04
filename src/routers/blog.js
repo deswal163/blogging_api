@@ -119,6 +119,75 @@ router.delete('/blogs/:id', auth, async (req, res) => {
         res.send(500).send(e)
     }
 })
+// GET /blogs/users/:id?search=title
+// GET /blogs/users/:id?limit=10&skip=0
+// GET /blogs/users/:id?sortBy=createdBy:asec
+router.get('/blogs/users/:id', async (req, res) => {
+    const match = {}
+    const sort = {}
+
+    if (req.query.search) {
+        match = {
+            $text: {
+                $search: req.query.search
+            },
+            author: req.params.id
+        }
+    }
+
+    if (req.query.sortBy) {
+        const parts = req.query.sortBy.split(":")
+        sort[parts[0]] = sort[parts[1]] === 'desc' ? -1: 1
+    }
+
+    try {
+        const blogs = await Blog.find({
+            match,
+            options: {
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip),
+                sort
+            }
+        })
+
+        res.send(blogs)
+    } catch (e) {
+        res.status(500).send(e)
+    }
+})
+
+router.get('/blogs/search', async (req, res) => {
+    const match = {}
+    const sort = {}
+
+    if (req.query.search) {
+        match = {
+            $text: {
+                $search: req.query.search
+            }
+        }
+    }
+
+    if (req.query.sortBy) {
+        const parts = req.query.sortBy.split(":")
+        sort[parts[0]] = sort[parts[1]] === 'desc' ? -1: 1
+    }
+
+    try {
+        const blogs = await Blog.find({
+            match,
+            options: {
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip),
+                sort
+            }
+        })
+
+        res.send(blogs)
+    } catch (e) {
+        res.status(500).send(e)
+    }
+})
 
 
 module.exports = router
